@@ -5,4 +5,6 @@ Jeżeli uruchomienie gry sie powiodło, na ekranie powinno być widoczne takie o
 Aby zacząć grę należy nacisnąć przycisk set stone, po ustawieniu się kamienia na pozycji, możemy pchnąć kamień poprzez naciśniecię i krótkie przeciągnięcie go myszką. 
 W grze mamy dwie drużyny - zielonych i żółtych.  Kamienie drużyn są ustawiene naprzemiennie po naciśnieciu "set stone".
 W ramach rundy drużyny maja po 5 rzutów kamieniami.
+Po tym program ogłasza zwyciężce i zaczyna się nowa runda.
+
 Przycisk "restart" umożliwia zrestartowanie stanu danej rundy.
