@@ -17,19 +17,18 @@ GRAY = (169, 169, 169)
 FRICTION = 0.98  # Współczynnik tarcia
 FONT_SIZE = 36
 
-# Parametry kameni
+# Parametry kamieni
 STONE_RADIUS = 24
 STONE_MASS = 18
 
 # Tworzenie ekranu
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Curling Game Simulator")
+#pygame.display.setCaption("Curling Game Simulator")
 
 # Załadowanie planszy z pliku
 background_image = pygame.image.load('resources/curling_board.png')
 background_rect = background_image.get_rect()
 
-#
 font = pygame.font.Font(None, FONT_SIZE)
 
 
@@ -100,6 +99,7 @@ class Stone:
             other.pos[0] -= nx * (overlap / 2)
             other.pos[1] -= ny * (overlap / 2)
 
+
 # Tworzenie kamieni dla każdej drużyny
 stones = []
 stone_counter = 0  # Licznik kamieni
@@ -118,11 +118,6 @@ def draw_button(text, rect, color):
     text_surf = font.render(text, True, BLACK)
     text_rect = text_surf.get_rect(center=rect.center)
     screen.blit(text_surf, text_rect)
-
-
-# Funkcja do sprawdzenia, czy gra już się skończyła
-def is_game_over():
-    return stone_counter >= 2 * max_stones_per_team
 
 
 # Funkcja określająca zwycięzcę
@@ -148,9 +143,10 @@ def determine_winner():
 
 # Funkcja do restartu gry
 def restart_game():
-    global stones, stone_counter
+    global stones, stone_counter, game_over
     stones = []
     stone_counter = 0
+    game_over = False
 
 
 # Prostokąty przycisków
@@ -163,6 +159,7 @@ selected_stone = None
 mouse_start_pos = None
 game_over = False
 winner_text = ""
+winner_declared = False  # New flag to track if winner is declared
 
 while running:
     for event in pygame.event.get():
@@ -174,6 +171,7 @@ while running:
             if set_stone_button.collidepoint(mouse_pos) and not game_over:
                 selected_stone = None
                 # Na podstawie "stone counter" program zamienia kolory kolejnych kamieni
+
                 if stone_counter % 2 == 0:
                     color = GREEN
                     team = 0
@@ -183,12 +181,12 @@ while running:
                 # Umieszczenie kamienia w pozycji startowej
                 stone = Stone(color, [85, HEIGHT // 2], team)
                 stones.append(stone)
-                stone_counter += 1  # Inkrementacja licznika kamieni (stone counter)
+                stone_counter += 1
             # Program sprawdza, czy wciśnięto przycisk "restart"
             elif restart_button.collidepoint(mouse_pos):
                 restart_game()
-                game_over = False
                 winner_text = ""
+                winner_declared = False
             else:
                 # Program wybiera kamień, gdy go naciśnięto
                 for stone in stones:
@@ -234,21 +232,18 @@ while running:
         stone.draw()
 
     # Sprawdzanie, czy ostatni kamień przestał się ruszać i gra dobiegła końca
-    if stone_counter == 2 * max_stones_per_team and not any(stone.velocity != [0, 0] for stone in stones):
+    if stone_counter == 2 * max_stones_per_team and not any(stone.velocity != [0, 0] for stone in stones) and not any(stone.pos == [85,HEIGHT/2] for stone in stones):
         game_over = True
-        winner_text = determine_winner()
+        if not winner_declared:
+            winner_text = determine_winner()
 
-        # Aktualizacja wyników na podstawie zwycięzcy
-        if "Green Wins" in winner_text:
-            green_wins += 1
-        elif "Yellow Wins" in winner_text:
-            yellow_wins += 1
+            # Aktualizacja wyników na podstawie zwycięzcy
+            if "Green Wins" in winner_text:
+                green_wins += 1
+            elif "Yellow Wins" in winner_text:
+                yellow_wins += 1
 
-        # Po określeniu zwycięzcy, program restartuje grę
-        pygame.time.delay(3000)  # Program najpierw czeka 3 sekundy
-        restart_game()
-        game_over = False
-        winner_text = ""
+            winner_declared = True
 
     if game_over:
         winner_surf = font.render(winner_text, True, BLACK)
