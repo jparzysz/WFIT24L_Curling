@@ -122,7 +122,7 @@ def draw_button(text, rect, color):
 
 # Funkcja określająca zwycięzcę
 def determine_winner():
-    center_x, center_y = WIDTH - 100, HEIGHT // 2
+    center_x, center_y = WIDTH - 356, HEIGHT // 2
     min_distance_green = float('inf')
     min_distance_yellow = float('inf')
 
@@ -232,7 +232,7 @@ while running:
         stone.draw()
 
     # Sprawdzanie, czy ostatni kamień przestał się ruszać i gra dobiegła końca
-    if stone_counter == 2 * max_stones_per_team and not any(stone.velocity != [0, 0] for stone in stones) and not any(stone.pos == [85,HEIGHT/2] for stone in stones):
+    if stone_counter == 2 * max_stones_per_team and not any((stone.velocity != [0, 0] or stone.pos == [85,HEIGHT//2])  for stone in stones):
         game_over = True
         if not winner_declared:
             winner_text = determine_winner()
