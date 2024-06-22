@@ -127,7 +127,8 @@ def is_game_over():
 
 # Funkcja określająca zwycięzcę
 def determine_winner():
-    center_x, center_y = WIDTH - 100, HEIGHT // 2
+    #print("Trwa wyznaczanie zwycięzcy...")
+    center_x, center_y = WIDTH - 356, HEIGHT // 2
     min_distance_green = float('inf')
     min_distance_yellow = float('inf')
 
